@@ -1,0 +1,79 @@
+/* Playlist Component Styling */
+.playlist {
+    display: inline-block;
+    width: 300px;
+    padding: 20px;
+    border: 2px solid #ccc;
+    background-color: #f4f4f4;
+    margin: 20px;
+    border-radius: 10px;
+}
+
+.playlist input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+laylist input:focus {
+    border-color: #007bff; /* Change this to your desired focus color */
+    outline: none; /* Remove default outline */
+}
+/* Save Button Styling */
+.save-button {
+    background-color: #1db954;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.save-button:hover {
+    background-color: #17a74b;
+}
+
+/* Tracklist Component Styling */
+.tracklist {
+    margin: 20px 0;
+}
+
+/* Track Component Styling */
+.track {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: rgb(71, 75, 71);
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.track h4, .track p {
+    margin: 0;
+}
+
+.track button {
+    background-color: #1db954;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.track button:hover {
+    background-color: #17a74b;
+}
+
+/* Remove button styling */
+.remove-button {
+    background-color: #d32f2f;
+}
+
+.remove-button:hover {
+    background-color: #c12727;
+}
