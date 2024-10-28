@@ -1,21 +1,23 @@
-import React from 'react';
+import React from "react";
 
-const Track = ({ track, isRemoval, onRemove }) => {
-    const renderAction = () => {
-        return isRemoval ? (
-            <button className="remove-button" onClick={() => onRemove(track)}>Remove</button>
-        ) : (
-            <button className="add-button">Add to Playlist</button>
-        );
+const Track = ({ track, isRemoval, onRemove, onAdd }) => {
+    const handleClick = () => {
+        if (isRemoval) {
+            onRemove(track);
+        } else {
+            onAdd(track); // Call onAdd when adding to the playlist
+        }
     };
 
     return (
-        <div className="track">
-            <div>
-                <h4>{track.title}</h4>
-                <p>{track.artist}</p>
+        <div className="Track">
+            <div className="Track-information">
+                <h3>{track.name}</h3>
+                <p>{track.artist} | {track.album}</p>
             </div>
-            {renderAction()}
+            <button className="Track-action" onClick={handleClick}>
+                {isRemoval ? "-" : "+"}
+            </button>
         </div>
     );
 };

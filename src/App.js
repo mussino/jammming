@@ -1,93 +1,70 @@
-import React, { useState, useEffect } from 'react';
-import Header from './Header';
-import SearchBar from './SearchBar';
-import SearchResults from './SearchResults';
-import Playlist from './Playlist';
-import Spotify from './Spotify'; // Import the Spotify module
+import React, { useState, useCallback } from "react";
+import Header from './Header'
+import Playlist from "./Playlist";
+import SearchBar from "./SearchBar";
+import SearchResults from "./SearchResults";
+import Spotify from "./Spotify";
 
 const App = () => {
   const [searchResults, setSearchResults] = useState([]);
-  const [playlistName, setPlaylistName] = useState('My Playlist');
+  const [playlistName, setPlaylistName] = useState("New Playlist");
   const [playlistTracks, setPlaylistTracks] = useState([]);
 
-  // State for holding the access token
-  const [accessToken, setAccessToken] = useState('');
-
-  // Use useEffect to get the access token when the app loads
-  useEffect(() => {
-    const token = Spotify.getAccessToken();  // Get the Spotify access token
-    setAccessToken(token);  // Store it in state
+  const search = useCallback((term) => {
+    Spotify.search(term).then(setSearchResults);
   }, []);
 
-  const handleSearch = (searchTerm) => {
-    if (!accessToken) {
-      alert("You're not logged in to Spotify!");
-      return;
-    }
+  const addTrack = useCallback(
+    (track) => {
+      if (playlistTracks.some((savedTrack) => savedTrack.id === track.id))
+        return;
 
-    // Simulate searching for music (you’ll replace this with an actual API call using the token)
-    const mockResults = [
-      { id: 1, title: 'Song 1', artist: 'Artist A', uri: 'spotify:track:1' },
-      { id: 2, title: 'Song 2', artist: 'Artist B', uri: 'spotify:track:2' },
-      { id: 3, title: 'Song 3', artist: 'Artist C', uri: 'spotify:track:3' },
-    ];
+      setPlaylistTracks((prevTracks) => [...prevTracks, track]);
+    },
+    [playlistTracks]
+  );
 
-    // Filter results based on search term (you’ll eventually replace this with actual Spotify API filtering)
-    const filteredResults = mockResults.filter(
-      (song) =>
-        song.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        song.artist.toLowerCase().includes(searchTerm.toLowerCase())
+  const removeTrack = useCallback((track) => {
+    setPlaylistTracks((prevTracks) =>
+      prevTracks.filter((currentTrack) => currentTrack.id !== track.id)
     );
+  }, []);
 
-    setSearchResults(filteredResults);
-  };
+  const updatePlaylistName = useCallback((name) => {
+    setPlaylistName(name);
+  }, []);
 
-  const addTrackToPlaylist = (track) => {
-    const isTrackInPlaylist = playlistTracks.some((item) => item.id === track.id);
-    
-    if (!isTrackInPlaylist) {
-      setPlaylistTracks([...playlistTracks, track]); // Add track if it’s not in playlist
-    }
-  };
+  const savePlaylist = useCallback(() => {
+    const trackUris = playlistTracks.map((track) => track.uri);
+    console.log("Playlist Name:", playlistName);
+    console.log("Track URIs:", trackUris);
 
-  const removeTrackFromPlaylist = (track) => {
-    setPlaylistTracks(playlistTracks.filter((item) => item.id !== track.id)); // Remove track
-  };
-
-  const savePlaylist = () => {
-    if (!accessToken) {
-      alert("You need to log in to Spotify to save the playlist.");
-      return;
-    }
-
-    const trackUris = playlistTracks.map(track => track.uri);  // Extract URIs from tracks
-    if (trackUris.length === 0) {
-      alert("Your playlist is empty!");
-      return;
-    }
-
-    // You’ll eventually make a POST request to Spotify’s API here to save the playlist.
-    // Example (pseudo-code):
-    // Spotify.savePlaylist(playlistName, trackUris, accessToken).then(() => {
-    //   setPlaylistTracks([]);  // Clear playlist after saving
-    //   setPlaylistName('New Playlist');  // Reset the playlist name
-    // });
-
-    console.log('Saving playlist to Spotify:', playlistName, trackUris);
-  };
+    Spotify.savePlaylist(playlistName, trackUris).then(() => {
+      setPlaylistName("New Playlist");
+      setPlaylistTracks([]);
+  }).catch(error => {
+      console.error("Error saving playlist:", error);
+  });
+}, [playlistName, playlistTracks]);
 
   return (
-    <div className="App">
-      <Header />
-      <SearchBar onSearch={handleSearch} />
-      <SearchResults results={searchResults} onAdd={addTrackToPlaylist} />
-      <Playlist 
-        name={playlistName} 
-        tracks={playlistTracks} 
-        onRemove={removeTrackFromPlaylist} 
-        onNameChange={setPlaylistName} 
-        onSave={savePlaylist}
-      />
+    <div>
+      <h1>
+        Ja<span className="highlight">mmm</span>ing
+      </h1>
+      <div className="App">
+        <SearchBar onSearch={search} />
+        <div className="App-playlist">
+          <SearchResults searchResults={searchResults} onAdd={addTrack} />
+          <Playlist
+            playlistName={playlistName}
+            playlistTracks={playlistTracks}
+            onNameChange={updatePlaylistName}
+            onRemove={removeTrack}
+            onSave={savePlaylist}
+          />
+        </div>
+      </div>
     </div>
   );
 };
