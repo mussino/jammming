@@ -49,7 +49,6 @@ const App = () => {
 
   return (
     <div>
-      <Header />
       <div className="App">
         <SearchBar onSearch={search} />
         <div className="App-playlist">
