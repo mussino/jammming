@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from "react";
-import Header from './Header'
 import Playlist from "./Playlist";
 import SearchBar from "./SearchBar";
 import SearchResults from "./SearchResults";
 import Spotify from "./Spotify";
+import Header from "./Header";
 
 const App = () => {
   const [searchResults, setSearchResults] = useState([]);
@@ -49,9 +49,7 @@ const App = () => {
 
   return (
     <div>
-      <h1>
-        Ja<span className="highlight">mmm</span>ing
-      </h1>
+      <Header />
       <div className="App">
         <SearchBar onSearch={search} />
         <div className="App-playlist">
