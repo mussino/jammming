@@ -1,21 +1,20 @@
-import React, { useState, useCallback } from "react";
-import "./styles/SearchBar.css";
+import React, { useCallback, useState } from "react";
 
-const SearchBar = (props) => {
+const SearchBar = ({ onSearch }) => {
   const [term, setTerm] = useState("");
 
-  const handleTermChange = useCallback((event) => {
-    setTerm(event.target.value);
-  }, []);
+  const handleSearch = useCallback(() => {
+    onSearch(term);
+  }, [onSearch, term]); // Now, only 'onSearch' and 'term' are in the dependency array
 
-  const search = useCallback(() => {
-    props.onSearch(term);
-  }, [props.onSearch, term]);
+  const handleTermChange = (event) => {
+    setTerm(event.target.value);
+  };
 
   return (
     <div className="SearchBar">
-      <input placeholder="Enter A Song Title" onChange={handleTermChange} />
-      <button className="SearchButton" onClick={search}>
+      <input placeholder="Enter A Song, Album, or Artist" onChange={handleTermChange} />
+      <button className="SearchButton" onClick={handleSearch}>
         SEARCH
       </button>
     </div>
